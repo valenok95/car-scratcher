@@ -1,6 +1,10 @@
 ru.wallentos.carscratcher:
   encar-host: http://api.encar.com/
   encar-car-header-info-method: search/car/list/warranty
+  mongo: search/car/list/warranty
 spring:
   codec:
     max-in-memory-size: 500KB
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}

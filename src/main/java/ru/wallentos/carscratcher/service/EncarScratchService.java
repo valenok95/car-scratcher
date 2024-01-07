@@ -23,8 +23,11 @@ public class EncarScratchService {
      * Обновить базу автомобилей.
      */
     public void refreshCache() {
-        encarRepository.deleteAllCars();
+        log.info("Проверяем актуальное количество объявлений");
         int carCount = encarSender.getEncarDataCount();
+        log.info("В новый КЭШ будет добавлено {} объявлений", carCount);
+        log.info("удаляем текущий КЭШ");
+        encarRepository.deleteAllCars();
         saveEncarDataByCarCount(carCount);
 
     }
@@ -34,6 +37,7 @@ public class EncarScratchService {
      * Примерно 4 минуты на 147623 записи.
      */
     private void saveEncarDataByCarCount(int carCount) {
+        log.info("начинаем добавлять объявления в КЭШ");
         for (int i = 0; i < carCount; i = i + 400) {
             log.info("Обработано {} автомобилей из {}", i, carCount);
             var currentResult = encarSender.getEncarInfoLimitedList(false, i, 400);

@@ -106,7 +106,6 @@ public class EncarRepository {
      */
     private Query buildQueryForCarFindByFilterByOneCriteria(CarFilterRequestDto filter) {
         final Criteria criteria = new Criteria();
-        Query query = new Query();
         addAndCriteria(criteria, filter.getCarIds(), "_id");
         addAndCriteria(criteria, filter.getColors(), "color");
         addAndCriteria(criteria, filter.getBadges(), "badge");
