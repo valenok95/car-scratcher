@@ -2,8 +2,10 @@ package ru.wallentos.carscratcher.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +60,15 @@ public class UIController {
     @GetMapping("/update-cache")
     public void updateCache() {
         encarScratchService.refreshCache();
+    }
+
+    @GetMapping("/get-mark-list")
+    public ResponseEntity<List<String>> getMarkList() {
+        return ResponseEntity.ok(encarScratchService.getMarkList());
+    }
+
+    @GetMapping("/get-model-list-by-mark/{markName}")
+    public ResponseEntity<List<String>> getModelListByMarkName(@PathVariable String markName) {
+        return ResponseEntity.ok(encarScratchService.getModelListByMarkName(markName));
     }
 }

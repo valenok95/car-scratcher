@@ -55,7 +55,7 @@ public class EncarRepository {
      * Чистка коллекции авто.
      */
     public void deleteAllCars() {
-        mongoTemplate.dropCollection("car");
+        mongoTemplate.dropCollection(ENCAR_RESULT_COLLECTION_NAME);
     }
 
     /**
@@ -69,7 +69,7 @@ public class EncarRepository {
                         Criteria.where("_id")
                                 .in(carDtoList.stream().map(EncarSearchResponseDto.CarDto::getCarId)
                                         .toList())),
-                "car");
+                ENCAR_RESULT_COLLECTION_NAME);
         mongoTemplate.insertAll(carDtoList);
     }
 
@@ -195,7 +195,7 @@ public class EncarRepository {
      * @param filterCollection список значений
      * @param fieldName        название поля
      */
-    public void addAndCriteria(Criteria criteria, Collection<?> filterCollection, String
+    private void addAndCriteria(Criteria criteria, Collection<?> filterCollection, String
             fieldName) {
         if (!CollectionUtils.isEmpty(filterCollection)) {
             criteria.and(fieldName).in(filterCollection);
@@ -208,10 +208,33 @@ public class EncarRepository {
      * @param filterCollection список значений
      * @param fieldName        название поля
      */
-    public void addAndCriteria(Query query, Collection<?> filterCollection, String
+    private void addAndCriteria(Query query, Collection<?> filterCollection, String
             fieldName) {
         if (!CollectionUtils.isEmpty(filterCollection)) {
             query.addCriteria(Criteria.where(fieldName).in(filterCollection));
         }
+    }
+
+
+    /**
+     * Получить список моделей по марке из БД (distinct).
+     *
+     * @param markName производитель.
+     */
+    public List<String> getModelListByMarkName(String markName) {
+        return mongoTemplate.findDistinct(
+                new Query(
+                        Criteria.where("manufacturer")
+                                .in(markName)),
+                "model", ENCAR_RESULT_COLLECTION_NAME, String.class);
+    }
+
+    /**
+     * Получить список марок из БД (distinct).
+     */
+    public List<String> getMarkList() {
+        return mongoTemplate.findDistinct(
+                new Query(),
+                "manufacturer", ENCAR_RESULT_COLLECTION_NAME, String.class);
     }
 }

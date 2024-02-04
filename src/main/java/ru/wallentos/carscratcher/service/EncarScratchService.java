@@ -65,4 +65,25 @@ public class EncarScratchService {
         log.info("Поиск авто в БД Mongo по фильтру: {}", filter);
         return encarRepository.findCarsByFilter(filter);
     }
+
+    /**
+     * Получить список моделей по марке авто.
+     *
+     * @param markName производитель
+     * @return список моделей
+     */
+    public List<String> getModelListByMarkName(String markName) {
+        log.info("Получаем список моделей авто в БД Mongo для марки {}", markName);
+        return encarRepository.getModelListByMarkName(markName);
+    }
+
+    /**
+     * Получить список марок.
+     *
+     * @return список марок
+     */
+    public List<String> getMarkList() {
+        log.info("Получаем список марок авто");
+        return encarRepository.getMarkList();
+    }
 }
