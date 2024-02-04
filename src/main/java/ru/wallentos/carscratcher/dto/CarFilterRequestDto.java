@@ -39,5 +39,7 @@ public class CarFilterRequestDto {
     private Integer priceLessThan;
     private Integer limit;
     private Integer skip;
+    private String sortField;
+    private Boolean sortAscMode;
     private List<String> officeCityStates;
 }

@@ -4,6 +4,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
@@ -117,7 +118,6 @@ public class EncarRepository {
         addAndCriteria(criteria, filter.getTransmissions(), "transmission");
 
 
-
         if (!ObjectUtils.isEmpty(filter.getPriceLessThan())) {
             criteria.and(PRICE_FIELD_NAME).lte(filter.getPriceLessThan());
         }
@@ -159,24 +159,31 @@ public class EncarRepository {
         addAndCriteria(query, filter.getTransmissions(), "transmission");
 
         if (!ObjectUtils.isEmpty(filter.getYearLessThan())) {
-            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).lte(filter.getYearLessThan())).with(Sort.by(Sort.Direction.ASC, YEAR_FIELD_NAME));
+            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).lte(filter.getYearLessThan()));
         }
         if (!ObjectUtils.isEmpty(filter.getYearMoreThan())) {
-            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).gte(filter.getYearMoreThan())).with(Sort.by(Sort.Direction.ASC, YEAR_FIELD_NAME));
+            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).gte(filter.getYearMoreThan()));
         }
 
         if (!ObjectUtils.isEmpty(filter.getPriceLessThan())) {
-            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).lte(filter.getPriceLessThan())).with(Sort.by(Sort.Direction.ASC, PRICE_FIELD_NAME));
+            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).lte(filter.getPriceLessThan()));
         }
         if (!ObjectUtils.isEmpty(filter.getPriceMoreThan())) {
-            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).gte(filter.getPriceMoreThan())).with(Sort.by(Sort.Direction.ASC, PRICE_FIELD_NAME));
+            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).gte(filter.getPriceMoreThan()));
         }
 
         if (!ObjectUtils.isEmpty(filter.getMileageLessThan())) {
-            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).lte(filter.getMileageLessThan())).with(Sort.by(Sort.Direction.ASC, MILEAGE_FIELD_NAME));
+            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).lte(filter.getMileageLessThan()));
         }
         if (!ObjectUtils.isEmpty(filter.getMileageMoreThan())) {
-            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).gte(filter.getMileageMoreThan())).with(Sort.by(Sort.Direction.ASC, MILEAGE_FIELD_NAME));
+            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).gte(filter.getMileageMoreThan()));
+        }
+
+        //сортировка
+        if (!ObjectUtils.isEmpty(filter.getSortField()) && Objects.nonNull(filter.getSortAscMode())) {
+            var sortField = filter.getSortField();
+            var sortMode = filter.getSortAscMode() ? Sort.Direction.ASC : Sort.Direction.DESC;
+            query.with(Sort.by(sortMode, sortField));
         }
         return query;
     }

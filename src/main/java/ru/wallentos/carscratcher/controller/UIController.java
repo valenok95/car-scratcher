@@ -1,11 +1,13 @@
 package ru.wallentos.carscratcher.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
@@ -26,7 +28,33 @@ public class UIController {
     public CarFilterResponseDto searchCarsByFilter(@RequestBody CarFilterRequestDto filter) {
         return encarScratchService.findCarsByFilter(filter);
     }
-//MONGODB_URI=mongodb://localhost:27017/test
+
+    @CrossOrigin
+    @GetMapping("/search-cars-by-filter")
+    public CarFilterResponseDto searchCarsByFilterGetRequest(
+            @RequestParam(required = false) List<String> manufacturers,
+            @RequestParam(required = false) List<String> models,
+            @RequestParam(required = false) List<String> badges,
+            @RequestParam(required = false) List<String> badgeDetails,
+            @RequestParam(required = false) List<String> transmissions,
+            @RequestParam(required = false) List<String> fuelTypes,
+            @RequestParam(required = false) Integer yearMoreThan,
+            @RequestParam(required = false) Integer yearLessThan,
+            @RequestParam(required = false) Integer mileageMoreThan,
+            @RequestParam(required = false) Integer mileageLessThan,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) Integer priceMoreThan,
+            @RequestParam(required = false) Integer priceLessThan,
+            @RequestParam(required = false) Integer limit,
+            @RequestParam(required = false) Integer skip,
+            @RequestParam(required = false) Boolean sortAscMode,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) List<String> officeCityStates) {
+        var filter = CarFilterRequestDto.builder().manufacturers(manufacturers).models(models).badges(badges).badgeDetails(badgeDetails).transmissions(transmissions).fuelTypes(fuelTypes).yearMoreThan(yearMoreThan).yearLessThan(yearLessThan).mileageMoreThan(mileageMoreThan).mileageLessThan(mileageLessThan).colors(colors).priceMoreThan(priceMoreThan).priceLessThan(priceLessThan).limit(limit).skip(skip).sortAscMode(sortAscMode).sortField(sortField).officeCityStates(officeCityStates).build();
+        return encarScratchService.findCarsByFilter(filter);
+    }
+
+    //MONGODB_URI=mongodb://localhost:27017/test
     @GetMapping("/update-cache")
     public void updateCache() {
         encarScratchService.refreshCache();
