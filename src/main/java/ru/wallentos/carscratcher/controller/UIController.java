@@ -62,11 +62,13 @@ public class UIController {
         encarScratchService.refreshCache();
     }
 
+    @CrossOrigin
     @GetMapping("/get-mark-list")
     public ResponseEntity<List<String>> getMarkList() {
         return ResponseEntity.ok(encarScratchService.getMarkList());
     }
 
+    @CrossOrigin
     @GetMapping("/get-model-list-by-mark/{markName}")
     public ResponseEntity<List<String>> getModelListByMarkName(@PathVariable String markName) {
         return ResponseEntity.ok(encarScratchService.getModelListByMarkName(markName));
