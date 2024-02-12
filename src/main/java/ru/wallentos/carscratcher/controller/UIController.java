@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
+import ru.wallentos.carscratcher.dto.WDType;
 import ru.wallentos.carscratcher.service.EncarScratchService;
 
 @RestController
@@ -51,8 +52,10 @@ public class UIController {
             @RequestParam(required = false) Integer skip,
             @RequestParam(required = false) Boolean sortAscMode,
             @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) WDType wdType,
             @RequestParam(required = false) List<String> officeCityStates) {
-        var filter = CarFilterRequestDto.builder().manufacturers(manufacturers).models(models).badges(badges).badgeDetails(badgeDetails).transmissions(transmissions).fuelTypes(fuelTypes).yearMoreThan(yearMoreThan).yearLessThan(yearLessThan).mileageMoreThan(mileageMoreThan).mileageLessThan(mileageLessThan).colors(colors).priceMoreThan(priceMoreThan).priceLessThan(priceLessThan).limit(limit).skip(skip).sortAscMode(sortAscMode).sortField(sortField).officeCityStates(officeCityStates).build();
+        var filter =
+                CarFilterRequestDto.builder().manufacturers(manufacturers).models(models).badges(badges).badgeDetails(badgeDetails).transmissions(transmissions).fuelTypes(fuelTypes).yearMoreThan(yearMoreThan).yearLessThan(yearLessThan).mileageMoreThan(mileageMoreThan).mileageLessThan(mileageLessThan).colors(colors).priceMoreThan(priceMoreThan).priceLessThan(priceLessThan).limit(limit).skip(skip).sortAscMode(sortAscMode).sortField(sortField).officeCityStates(officeCityStates).wdType(wdType).build();
         return encarScratchService.findCarsByFilter(filter);
     }
 
