@@ -24,8 +24,8 @@ dependencies {
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version:  '1.2.3'
-    compile group: 'ch.qos.logback', name: 'logback-core', version:  '1.2.3'
+    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version:  '1.2.3'
+    compileOnly group: 'ch.qos.logback', name: 'logback-core', version:  '1.2.3'
 }
 
 tasks.named('test') {
