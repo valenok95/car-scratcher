@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
@@ -107,15 +108,15 @@ public class EncarRepository {
      */
     private Query buildQueryForCarFindByFilterByOneCriteria(CarFilterRequestDto filter) {
         final Criteria criteria = new Criteria();
-        addAndCriteria(criteria, filter.getCarIds(), "_id");
-        addAndCriteria(criteria, filter.getColors(), "color");
-        addAndCriteria(criteria, filter.getBadges(), "badge");
-        addAndCriteria(criteria, filter.getBadgeDetails(), "badgeDetail");
-        addAndCriteria(criteria, filter.getFuelTypes(), "fuelType");
-        addAndCriteria(criteria, filter.getManufacturers(), "manufacturer");
-        addAndCriteria(criteria, filter.getModels(), "model");
-        addAndCriteria(criteria, filter.getOfficeCityStates(), "officeCityState");
-        addAndCriteria(criteria, filter.getTransmissions(), "transmission");
+        addAndInCriteria(criteria, filter.getCarIds(), "_id");
+        addAndInCriteria(criteria, filter.getColors(), "color");
+        addAndInCriteria(criteria, filter.getBadges(), "badge");
+        addAndInCriteria(criteria, filter.getBadgeDetails(), "badgeDetail");
+        addAndInCriteria(criteria, filter.getFuelTypes(), "fuelType");
+        addAndInCriteria(criteria, filter.getManufacturers(), "manufacturer");
+        addAndInCriteria(criteria, filter.getModels(), "model");
+        addAndInCriteria(criteria, filter.getOfficeCityStates(), "officeCityState");
+        addAndInCriteria(criteria, filter.getTransmissions(), "transmission");
 
 
         if (!ObjectUtils.isEmpty(filter.getPriceLessThan())) {
@@ -148,15 +149,18 @@ public class EncarRepository {
      */
     private Query buildQueryForCarFindByFilterByLotsOfCriterias(CarFilterRequestDto filter) {
         Query query = new Query();
-        addAndCriteria(query, filter.getCarIds(), "_id");
-        addAndCriteria(query, filter.getColors(), "color");
-        addAndCriteria(query, filter.getBadges(), "badge");
-        addAndCriteria(query, filter.getBadgeDetails(), "badgeDetail");
-        addAndCriteria(query, filter.getFuelTypes(), "fuelType");
-        addAndCriteria(query, filter.getManufacturers(), "manufacturer");
-        addAndCriteria(query, filter.getModels(), "model");
-        addAndCriteria(query, filter.getOfficeCityStates(), "officeCityState");
-        addAndCriteria(query, filter.getTransmissions(), "transmission");
+        addAndInCriteria(query, filter.getCarIds(), "_id");
+        addAndInCriteria(query, filter.getColors(), "color");
+        addAndInCriteria(query, filter.getBadges(), "badge");
+        addAndInCriteria(query, filter.getBadgeDetails(), "badgeDetail");
+        addAndInCriteria(query, filter.getFuelTypes(), "fuelType");
+        addAndInCriteria(query, filter.getManufacturers(), "manufacturer");
+        addAndInCriteria(query, filter.getModels(), "model");
+        addAndInCriteria(query, filter.getOfficeCityStates(), "officeCityState");
+        addAndInCriteria(query, filter.getTransmissions(), "transmission");
+        if (Objects.nonNull(filter.getWdType())) {
+            query.addCriteria(Criteria.where("wdType").is(filter.getWdType().name()));
+        }
 
         addComparableFieldCriteria(query, filter.getYearLessThan(), filter.getYearMoreThan(),
                 YEAR_FIELD_NAME);
@@ -168,7 +172,7 @@ public class EncarRepository {
         //сортировка
         if (!ObjectUtils.isEmpty(filter.getSortField()) && Objects.nonNull(filter.getSortAscMode())) {
             var sortField = filter.getSortField();
-            var sortMode = filter.getSortAscMode() ? Sort.Direction.ASC : Sort.Direction.DESC;
+            var sortMode = Boolean.TRUE.equals(filter.getSortAscMode()) ? Sort.Direction.ASC : Sort.Direction.DESC;
             query.with(Sort.by(sortMode, sortField));
         }
         return query;
@@ -202,7 +206,7 @@ public class EncarRepository {
      * @param filterCollection список значений
      * @param fieldName        название поля
      */
-    private void addAndCriteria(Criteria criteria, Collection<?> filterCollection, String
+    private void addAndInCriteria(Criteria criteria, Collection<?> filterCollection, String
             fieldName) {
         if (!CollectionUtils.isEmpty(filterCollection)) {
             criteria.and(fieldName).in(filterCollection);
@@ -210,15 +214,28 @@ public class EncarRepository {
     }
 
     /**
-     * Добавление условия к запросу.
+     * Добавление условия к запросу список значений к полю.
      *
      * @param filterCollection список значений
      * @param fieldName        название поля
      */
-    private void addAndCriteria(Query query, Collection<?> filterCollection, String
+    private void addAndInCriteria(Query query, Collection<?> filterCollection, String
             fieldName) {
         if (!CollectionUtils.isEmpty(filterCollection)) {
             query.addCriteria(Criteria.where(fieldName).in(filterCollection));
+        }
+    }
+
+    /**
+     * Добавление условия к запросу.
+     *
+     * @param value     значение
+     * @param fieldName название поля
+     */
+    private void addAndIsCriteria(Query query, String value, String
+            fieldName) {
+        if (StringUtils.hasText(value)) {
+            query.addCriteria(Criteria.where(fieldName).is(value));
         }
     }
 

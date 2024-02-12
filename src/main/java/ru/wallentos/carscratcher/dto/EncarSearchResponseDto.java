@@ -58,6 +58,7 @@ public class EncarSearchResponseDto {
         private String color;
         private int price;
         private String officeCityState;
+        private WDType wdType;
         private List<EncarSearchResponseEntity.Photo> photos;
 
         @Version

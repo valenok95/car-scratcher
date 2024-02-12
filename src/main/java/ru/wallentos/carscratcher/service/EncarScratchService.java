@@ -8,14 +8,14 @@ import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseEntity;
-import ru.wallentos.carscratcher.mapper.EncarResponseMapper;
+import ru.wallentos.carscratcher.mapper.EncarResponseMapperImpl;
 import ru.wallentos.carscratcher.repository.EncarRepository;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class EncarScratchService {
-    private final EncarResponseMapper encarResponseMapper;
+    private final EncarResponseMapperImpl encarResponseMapper;
     private final EncarRepository encarRepository;
     private final EncarSender encarSender;
 

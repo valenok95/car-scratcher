@@ -22,10 +22,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
-    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version:  '1.2.3'
-    compileOnly group: 'ch.qos.logback', name: 'logback-core', version:  '1.2.3'
+    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version:  '1.4.7'
+    compileOnly group: 'ch.qos.logback', name: 'logback-core', version:  '1.4.7'
 }
 
 tasks.named('test') {

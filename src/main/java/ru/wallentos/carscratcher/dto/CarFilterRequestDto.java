@@ -41,5 +41,6 @@ public class CarFilterRequestDto {
     private Integer skip;
     private String sortField;
     private Boolean sortAscMode;
+    private WDType wdType;
     private List<String> officeCityStates;
 }
