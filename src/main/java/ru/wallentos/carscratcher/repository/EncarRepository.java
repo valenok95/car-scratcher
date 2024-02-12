@@ -158,26 +158,12 @@ public class EncarRepository {
         addAndCriteria(query, filter.getOfficeCityStates(), "officeCityState");
         addAndCriteria(query, filter.getTransmissions(), "transmission");
 
-        if (!ObjectUtils.isEmpty(filter.getYearLessThan())) {
-            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).lte(filter.getYearLessThan()));
-        }
-        if (!ObjectUtils.isEmpty(filter.getYearMoreThan())) {
-            query.addCriteria(Criteria.where(YEAR_FIELD_NAME).gte(filter.getYearMoreThan()));
-        }
-
-        if (!ObjectUtils.isEmpty(filter.getPriceLessThan())) {
-            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).lte(filter.getPriceLessThan()));
-        }
-        if (!ObjectUtils.isEmpty(filter.getPriceMoreThan())) {
-            query.addCriteria(Criteria.where(PRICE_FIELD_NAME).gte(filter.getPriceMoreThan()));
-        }
-
-        if (!ObjectUtils.isEmpty(filter.getMileageLessThan())) {
-            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).lte(filter.getMileageLessThan()));
-        }
-        if (!ObjectUtils.isEmpty(filter.getMileageMoreThan())) {
-            query.addCriteria(Criteria.where(MILEAGE_FIELD_NAME).gte(filter.getMileageMoreThan()));
-        }
+        addComparableFieldCriteria(query, filter.getYearLessThan(), filter.getYearMoreThan(),
+                YEAR_FIELD_NAME);
+        addComparableFieldCriteria(query, filter.getPriceLessThan(), filter.getPriceMoreThan(),
+                PRICE_FIELD_NAME);
+        addComparableFieldCriteria(query, filter.getMileageLessThan(), filter.getMileageMoreThan(),
+                MILEAGE_FIELD_NAME);
 
         //сортировка
         if (!ObjectUtils.isEmpty(filter.getSortField()) && Objects.nonNull(filter.getSortAscMode())) {
@@ -186,6 +172,27 @@ public class EncarRepository {
             query.with(Sort.by(sortMode, sortField));
         }
         return query;
+    }
+
+    /**
+     * Добавить фильтр по сравняемому полю. Больше-меньше.
+     *
+     * @param query
+     * @param lessThan
+     * @param moreThan
+     * @param field
+     */
+    private void addComparableFieldCriteria(Query query, Integer lessThan, Integer moreThan, String field) {
+        if (!ObjectUtils.isEmpty(lessThan) && !ObjectUtils.isEmpty(moreThan)) {
+            query.addCriteria(Criteria.where(field).lte(lessThan).gte(moreThan));
+        } else {
+            if (!ObjectUtils.isEmpty(lessThan)) {
+                query.addCriteria(Criteria.where(field).lte(lessThan));
+            }
+            if (!ObjectUtils.isEmpty(moreThan)) {
+                query.addCriteria(Criteria.where(field).gte(moreThan));
+            }
+        }
     }
 
     /**
