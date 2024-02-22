@@ -35,6 +35,7 @@ public class UIController {
     @CrossOrigin
     @GetMapping("/search-cars-by-filter")
     public CarFilterResponseDto searchCarsByFilterGetRequest(
+            @RequestParam(required = false) List<String> carIds,
             @RequestParam(required = false) List<String> manufacturers,
             @RequestParam(required = false) List<String> models,
             @RequestParam(required = false) List<String> badges,
@@ -55,7 +56,7 @@ public class UIController {
             @RequestParam(required = false) WDType wdType,
             @RequestParam(required = false) List<String> officeCityStates) {
         var filter =
-                CarFilterRequestDto.builder().manufacturers(manufacturers).models(models).badges(badges).badgeDetails(badgeDetails).transmissions(transmissions).fuelTypes(fuelTypes).yearMoreThan(yearMoreThan).yearLessThan(yearLessThan).mileageMoreThan(mileageMoreThan).mileageLessThan(mileageLessThan).colors(colors).priceMoreThan(priceMoreThan).priceLessThan(priceLessThan).limit(limit).skip(skip).sortAscMode(sortAscMode).sortField(sortField).officeCityStates(officeCityStates).wdType(wdType).build();
+                CarFilterRequestDto.builder().carIds(carIds).manufacturers(manufacturers).models(models).badges(badges).badgeDetails(badgeDetails).transmissions(transmissions).fuelTypes(fuelTypes).yearMoreThan(yearMoreThan).yearLessThan(yearLessThan).mileageMoreThan(mileageMoreThan).mileageLessThan(mileageLessThan).colors(colors).priceMoreThan(priceMoreThan).priceLessThan(priceLessThan).limit(limit).skip(skip).sortAscMode(sortAscMode).sortField(sortField).officeCityStates(officeCityStates).wdType(wdType).build();
         return encarScratchService.findCarsByFilter(filter);
     }
 
