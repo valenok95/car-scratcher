@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
+import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
 import ru.wallentos.carscratcher.dto.WDType;
 import ru.wallentos.carscratcher.service.EncarScratchService;
 
@@ -27,9 +26,9 @@ public class UIController {
     }
 
     @CrossOrigin
-    @PostMapping("/search-cars-by-filter")
-    public CarFilterResponseDto searchCarsByFilter(@RequestBody CarFilterRequestDto filter) {
-        return encarScratchService.findCarsByFilter(filter);
+    @GetMapping("/get-car-by-id/{id}")
+    public ResponseEntity<EncarSearchResponseDto.CarDto> getCarById(@PathVariable int id) {
+        return ResponseEntity.ok(encarScratchService.findCarsById(id));
     }
 
     @CrossOrigin

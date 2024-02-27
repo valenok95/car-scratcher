@@ -261,4 +261,14 @@ public class EncarRepository {
                 new Query(),
                 "manufacturer", ENCAR_RESULT_COLLECTION_NAME, String.class);
     }
+
+    /**
+     * Поиск авто по идентификатору.
+     *
+     * @param carId
+     * @return модель авто
+     */
+    public EncarSearchResponseDto.CarDto findCarsById(int carId) {
+        return mongoTemplate.findById(carId, EncarSearchResponseDto.CarDto.class, "car");
+    }
 }
