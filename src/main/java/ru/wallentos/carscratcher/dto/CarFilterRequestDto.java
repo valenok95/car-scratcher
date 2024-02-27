@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiResponse(description = "DTO для получения авто по фильтру")
 public class CarFilterRequestDto {
-    private List<String> carIds;
+    private List<Long> carIds;
     /**
      * Производитель.
      */

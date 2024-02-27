@@ -61,7 +61,7 @@ public class EncarScratchService {
      * @param carId
      * @return carResponse
      */
-    public EncarSearchResponseDto.CarDto findCarsById(int carId) {
+    public EncarSearchResponseDto.CarDto findCarsById(long carId) {
         log.info("Поиск авто в БД Mongo по id: {}", carId);
         return encarRepository.findCarsById(carId);
     }

@@ -43,7 +43,7 @@ public class EncarSearchResponseDto {
          * Идентификатор автомобиля encar.
          */
         @Id
-        private String carId;
+        private long carId;
         /**
          * Производитель.
          */

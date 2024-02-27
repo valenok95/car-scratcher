@@ -34,7 +34,7 @@ public class UIController {
     @CrossOrigin
     @GetMapping("/search-cars-by-filter")
     public CarFilterResponseDto searchCarsByFilterGetRequest(
-            @RequestParam(required = false) List<String> carIds,
+            @RequestParam(required = false) List<Long> carIds,
             @RequestParam(required = false) List<String> manufacturers,
             @RequestParam(required = false) List<String> models,
             @RequestParam(required = false) List<String> badges,

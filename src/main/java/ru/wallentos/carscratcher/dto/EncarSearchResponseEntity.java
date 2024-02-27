@@ -44,7 +44,7 @@ public class EncarSearchResponseEntity {
          * Идентификатор автомобиля encar.
          */
         @JsonProperty("Id")
-        private String carId;
+        private long carId;
         /**
          * Производитель.
          */

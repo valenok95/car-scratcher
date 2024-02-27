@@ -268,7 +268,7 @@ public class EncarRepository {
      * @param carId
      * @return модель авто
      */
-    public EncarSearchResponseDto.CarDto findCarsById(int carId) {
+    public EncarSearchResponseDto.CarDto findCarsById(long carId) {
         return mongoTemplate.findById(carId, EncarSearchResponseDto.CarDto.class, "car");
     }
 }
