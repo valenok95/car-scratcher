@@ -4,6 +4,16 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/test
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
 ru:
   wallentos:
