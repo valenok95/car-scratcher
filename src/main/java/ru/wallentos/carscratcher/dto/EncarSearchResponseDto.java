@@ -2,7 +2,6 @@ package ru.wallentos.carscratcher.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +52,7 @@ public class EncarSearchResponseDto {
         private String badgeDetail;
         private String transmission;
         private String fuelType;
-        private int year;
+        private int yearMonth;
         private int mileage;
         private String color;
         private int price;

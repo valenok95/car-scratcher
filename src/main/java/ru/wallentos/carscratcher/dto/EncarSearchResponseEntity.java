@@ -61,7 +61,7 @@ public class EncarSearchResponseEntity {
         @JsonProperty("FuelType")
         private String fuelType;
         @JsonProperty("Year")
-        private int year;
+        private int yearMonth;
         @JsonProperty("Mileage")
         private int mileage;
         @JsonProperty("Color")

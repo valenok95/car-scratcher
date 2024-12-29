@@ -1,0 +1,6 @@
+spring:
+  codec:
+    max-in-memory-size: 500KB
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}

@@ -8,14 +8,14 @@ import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseEntity;
-import ru.wallentos.carscratcher.mapper.EncarResponseMapperImpl;
+import ru.wallentos.carscratcher.mapper.EncarResponseMapper;
 import ru.wallentos.carscratcher.repository.EncarRepository;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class EncarScratchService {
-    private final EncarResponseMapperImpl encarResponseMapper;
+    private final EncarResponseMapper encarResponseMapper;
     private final EncarRepository encarRepository;
     private final EncarSender encarSender;
 
@@ -31,6 +31,7 @@ public class EncarScratchService {
         saveEncarDataByCarCount(carCount);
 
     }
+//TODO Прерывание одного из запросов не должно ломать всё обогащение.
 
     /**
      * Сохранить автомобили циклами по 400 отталкиваясь от общего количества.
@@ -40,30 +41,23 @@ public class EncarScratchService {
         log.info("начинаем добавлять объявления в КЭШ");
         for (int i = 0; i < carCount; i = i + 400) {
             log.info("Обработано {} автомобилей из {}", i, carCount);
-            var currentResult = encarSender.getEncarInfoLimitedList(false, i, 400);
-            saveCarsFromResponse(currentResult);
+            try {
+                EncarSearchResponseEntity currentResult = encarSender.getEncarInfoLimitedList(false, i, 400);
+                saveCarsFromResponse(currentResult);
+            } catch (Exception e) {
+                log.error("Ошибка при обработке запроса в encar! {}", e.getCause().getMessage());
+            }
         }
     }
 
 
-    public void saveCarsFromResponse(EncarSearchResponseEntity response) {
+    private void saveCarsFromResponse(EncarSearchResponseEntity response) {
         EncarSearchResponseDto responseDto = encarResponseMapper.toDto(response);
         List<EncarSearchResponseDto.CarDto> carDtoListToSave =
                 responseDto.getSearchResults();
         log.info("начинаем вставку записей bulk");
         encarRepository.insertOrUpdateCars(carDtoListToSave);
         log.info("завершили вставку записей bulk");
-    }
-
-    /**
-     * Поиск авто в БД по id.
-     *
-     * @param carId
-     * @return carResponse
-     */
-    public EncarSearchResponseDto.CarDto findCarsById(long carId) {
-        log.info("Поиск авто в БД Mongo по id: {}", carId);
-        return encarRepository.findCarsById(carId);
     }
 
     /**

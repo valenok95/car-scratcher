@@ -16,18 +16,22 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version:  '1.4.7'
+    compileOnly group: 'ch.qos.logback', name: 'logback-core', version:  '1.4.7'
+    
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
-    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version:  '1.4.7'
-    compileOnly group: 'ch.qos.logback', name: 'logback-core', version:  '1.4.7'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

@@ -24,7 +24,7 @@ public class WebClientConfig {
         return WebClient.builder()
                 .baseUrl(encatHost)
                 .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(500 * 1024)).build())
+                        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(700 * 1024)).build())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0")
                 .build();

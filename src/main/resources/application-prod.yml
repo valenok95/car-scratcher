@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+
+ru:
+  wallentos:
+    carscratcher:
+      calculator:
+        extra-pay-corea:
+          krw: ${EXTRA_PAY_KOREA_KRW}
+          rub: ${EXTRA_PAY_KOREA_RUB}

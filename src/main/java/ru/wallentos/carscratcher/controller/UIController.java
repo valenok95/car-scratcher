@@ -13,22 +13,25 @@ import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
 import ru.wallentos.carscratcher.dto.WDType;
+import ru.wallentos.carscratcher.repository.EncarRepository;
 import ru.wallentos.carscratcher.service.EncarScratchService;
 
 @RestController
 @RequestMapping("api/ui")
 public class UIController {
     private final EncarScratchService encarScratchService;
+    private final EncarRepository encarRepository;
 
     @Autowired
-    public UIController(EncarScratchService encarScratchService) {
+    public UIController(EncarScratchService encarScratchService, EncarRepository encarRepository) {
         this.encarScratchService = encarScratchService;
+        this.encarRepository = encarRepository;
     }
 
     @CrossOrigin
     @GetMapping("/get-car-by-id/{id}")
     public ResponseEntity<EncarSearchResponseDto.CarDto> getCarById(@PathVariable int id) {
-        return ResponseEntity.ok(encarScratchService.findCarsById(id));
+        return ResponseEntity.ok(encarRepository.findCarsById(id));
     }
 
     @CrossOrigin

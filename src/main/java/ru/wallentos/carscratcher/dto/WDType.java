@@ -4,5 +4,5 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum WDType {
-    TWD, FWD, UNKNOWN;
+    TWD, FWD, UNKNOWN
 }
