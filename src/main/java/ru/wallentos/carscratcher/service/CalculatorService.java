@@ -97,7 +97,6 @@ public class CalculatorService {
         int recyclingFee = calculateRecyclingFeeInRubles(carCategory, calculatorRequest.getVolume());
 
         return CalculatorResponseDto.builder()
-                .carId(calculatorRequest.getCarId())
                 .carCategory(carCategory)
                 // sanctionCar не относится к калькулятору, проверять снаружи.
                 .feeRate(feeRate)

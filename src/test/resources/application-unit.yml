@@ -2,3 +2,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/test
+
+
+ru:
+  wallentos:
+    carscratcher:
+      exchange-api:
+        exchange-coefficient: 1.03
