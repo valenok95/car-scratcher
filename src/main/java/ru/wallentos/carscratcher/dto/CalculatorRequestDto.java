@@ -1,11 +1,8 @@
 package ru.wallentos.carscratcher.dto;
 
-import java.time.LocalDate;
 import java.util.Locale;
-import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
-import ru.wallentos.carscratcher.Currency;
 
 /**
  * Запрос на расчёт детализации по авто.

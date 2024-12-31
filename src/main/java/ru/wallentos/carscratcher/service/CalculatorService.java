@@ -1,8 +1,8 @@
 package ru.wallentos.carscratcher.service;
 
-import static ru.wallentos.carscratcher.Currency.KRW;
-import static ru.wallentos.carscratcher.Currency.RUB;
-import static ru.wallentos.carscratcher.Currency.USD;
+import static ru.wallentos.carscratcher.dto.Currency.KRW;
+import static ru.wallentos.carscratcher.dto.Currency.RUB;
+import static ru.wallentos.carscratcher.dto.Currency.USD;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NEW_CAR_CUSTOMS_MAP;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NEW_CAR_PRICE_MAX_FLAT_RATE;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NORMAL_CAR_CUSTOMS_MAP;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.wallentos.carscratcher.Currency;
+import ru.wallentos.carscratcher.dto.Currency;
 import ru.wallentos.carscratcher.dto.CalculatorRequestDto;
 import ru.wallentos.carscratcher.dto.CalculatorResponseDto;
 import ru.wallentos.carscratcher.dto.CarCategory;

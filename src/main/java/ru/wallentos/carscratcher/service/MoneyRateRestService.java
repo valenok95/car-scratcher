@@ -1,10 +1,10 @@
 package ru.wallentos.carscratcher.service;
 
-import static ru.wallentos.carscratcher.Currency.CNY;
-import static ru.wallentos.carscratcher.Currency.EUR;
-import static ru.wallentos.carscratcher.Currency.KRW;
-import static ru.wallentos.carscratcher.Currency.RUB;
-import static ru.wallentos.carscratcher.Currency.USD;
+import static ru.wallentos.carscratcher.dto.Currency.CNY;
+import static ru.wallentos.carscratcher.dto.Currency.EUR;
+import static ru.wallentos.carscratcher.dto.Currency.KRW;
+import static ru.wallentos.carscratcher.dto.Currency.RUB;
+import static ru.wallentos.carscratcher.dto.Currency.USD;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.wallentos.carscratcher.Currency;
+import ru.wallentos.carscratcher.dto.Currency;
 
 /**
  * Сервис отвечающий за курсы валют.
