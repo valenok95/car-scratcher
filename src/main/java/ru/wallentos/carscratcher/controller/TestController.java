@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 import ru.wallentos.carscratcher.dto.CalculatorRequestDto;
 import ru.wallentos.carscratcher.dto.CalculatorResponseDto;
 import ru.wallentos.carscratcher.service.CalculatorService;
@@ -18,6 +18,7 @@ import ru.wallentos.carscratcher.service.MoneyRateRestService;
 public class TestController {
     private CalculatorService calculatorService;
     private MoneyRateRestService moneyRateRestService;
+
     @Autowired
     public TestController(CalculatorService calculatorService, MoneyRateRestService moneyRateRestService) {
         this.calculatorService = calculatorService;
@@ -25,16 +26,22 @@ public class TestController {
     }
 
     @CrossOrigin
-    @PostMapping("test-calculator")
-    public ResponseEntity<CalculatorResponseDto> calculateCarByFullRequest(@RequestBody CalculatorRequestDto calculatorRequestDto) {
-        return ResponseEntity.ok(calculatorService.calculateKoreaCarPrice(calculatorRequestDto));
+    @GetMapping("/calculate-car")
+    public Mono<CalculatorResponseDto> calculateCarByFullRequest(
+            @RequestParam(required = false) Integer yearMonth,
+            @RequestParam(required = false) Integer price,
+            @RequestParam(required = false) Integer volume) {
+        var requestDto = CalculatorRequestDto.builder()
+                .yearMonth(yearMonth).originalPrice(price).volume(volume).build();
+        return Mono.just(calculatorService.calculateKoreaCarPrice(requestDto));
     }
+
     @CrossOrigin
     @GetMapping("calculator-rates")
     public ResponseEntity<String> getMoneyConversionRates() {
         return ResponseEntity.ok(String.format("""
                 Курс расчёта:
                 %s
-                """,moneyRateRestService.getCalculationRatesInRublesMap()));
+                """, moneyRateRestService.getCalculationRatesInRublesMap()));
     }
 }

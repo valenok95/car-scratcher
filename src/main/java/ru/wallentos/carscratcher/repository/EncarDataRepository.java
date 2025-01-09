@@ -1,11 +1,11 @@
 package ru.wallentos.carscratcher.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
+import ru.wallentos.carscratcher.dto.EncarDto;
 
-public interface EncarDataRepository extends MongoRepository<EncarSearchResponseDto, String> {
+public interface EncarDataRepository extends MongoRepository<EncarDto, String> {
 
     
-    public EncarSearchResponseDto insert(EncarSearchResponseDto encarSearchResponseDto);
+    public EncarDto insert(EncarDto encarDto);
 
 }

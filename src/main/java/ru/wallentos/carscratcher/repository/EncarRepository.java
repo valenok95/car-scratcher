@@ -5,6 +5,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
@@ -17,13 +18,14 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
-import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
+import ru.wallentos.carscratcher.dto.EncarDto;
 
 @Repository
 @Log4j2
 @RequiredArgsConstructor
 public class EncarRepository {
     private final String ENCAR_RESULT_COLLECTION_NAME = "car";
+    private final String ID_FIELD_NAME = "_id";
     private final String PRICE_FIELD_NAME = "price";
     private final String MILEAGE_FIELD_NAME = "mileage";
     private final String YEAR_FIELD_NAME = "year";
@@ -35,43 +37,40 @@ public class EncarRepository {
     }
 
     /**
-     * Вставка авто в БД.
-     *
-     * @param carDto
-     */
-    public void insertCar(EncarSearchResponseDto.CarDto carDto) {
-        mongoTemplate.insert(carDto);
-    }
-
-    /**
-     * Вставка авто в БД.
-     *
-     * @param carDtoList список авто для сохранения.
-     */
-    public void insertCars(List<EncarSearchResponseDto.CarDto> carDtoList) {
-        mongoTemplate.insertAll(carDtoList);
-    }
-
-    /**
-     * Чистка коллекции авто.
-     */
-    public void deleteAllCars() {
-        mongoTemplate.dropCollection(ENCAR_RESULT_COLLECTION_NAME);
-    }
-
-    /**
      * Вставка/Обновление авто в БД.
      *
      * @param carDtoList список авто для сохранения.
      */
-    public void insertOrUpdateCars(List<EncarSearchResponseDto.CarDto> carDtoList) {
+    public void insertOrReplaceCars(List<EncarDto.CarDto> carDtoList) {
         mongoTemplate.findAllAndRemove(
                 new Query(
                         Criteria.where("_id")
-                                .in(carDtoList.stream().map(EncarSearchResponseDto.CarDto::getCarId)
+                                .in(carDtoList.stream().map(EncarDto.CarDto::getCarId)
                                         .toList())),
                 ENCAR_RESULT_COLLECTION_NAME);
         mongoTemplate.insertAll(carDtoList);
+    }
+
+    /**
+     * Получение автомобиля из базы.
+     *
+     * @param carId идентификатор авто.
+     */
+    public EncarDto.CarDto getCarById(long carId) {
+        return mongoTemplate.findById(carId, EncarDto.CarDto.class);
+    }
+
+    /**
+     * Получение автомобилей из базы.
+     *
+     * @param carIds идентификаторы авто.
+     */
+    public List<EncarDto.CarDto> getCarsByIds(Set<Long> carIds) {
+        return mongoTemplate.find(
+                new Query(
+                        Criteria.where("_id")
+                                .in(carIds)), EncarDto.CarDto.class,
+                ENCAR_RESULT_COLLECTION_NAME);
     }
 
     /**
@@ -92,8 +91,8 @@ public class EncarRepository {
         if (!ObjectUtils.isEmpty(filter.getSkip())) {
             resultQuery.skip(filter.getSkip());
         }
-        List<EncarSearchResponseDto.CarDto> searchResults =
-                mongoTemplate.find(resultQuery, EncarSearchResponseDto.CarDto.class);
+        List<EncarDto.CarDto> searchResults =
+                mongoTemplate.find(resultQuery, EncarDto.CarDto.class);
 
         log.info("выполняется запрос: {}", resultQuery);
         return new CarFilterResponseDto(count, searchResults);
@@ -108,7 +107,7 @@ public class EncarRepository {
      */
     private Query buildQueryForCarFindByFilterByOneCriteria(CarFilterRequestDto filter) {
         final Criteria criteria = new Criteria();
-        addAndInCriteria(criteria, filter.getCarIds(), "_id");
+        addAndInCriteria(criteria, filter.getCarIds(), ID_FIELD_NAME);
         addAndInCriteria(criteria, filter.getColors(), "color");
         addAndInCriteria(criteria, filter.getBadges(), "badge");
         addAndInCriteria(criteria, filter.getBadgeDetails(), "badgeDetail");
@@ -268,8 +267,8 @@ public class EncarRepository {
      * @param carId
      * @return модель авто
      */
-    public EncarSearchResponseDto.CarDto findCarsById(long carId) {
+    public EncarDto.CarDto findCarById(long carId) {
         log.info("Поиск авто в БД Mongo по id: {}", carId);
-        return mongoTemplate.findById(carId, EncarSearchResponseDto.CarDto.class, "car");
+        return mongoTemplate.findById(carId, EncarDto.CarDto.class, "car");
     }
 }

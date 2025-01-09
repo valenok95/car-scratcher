@@ -1,8 +1,5 @@
 package ru.wallentos.carscratcher.service;
 
-import static ru.wallentos.carscratcher.dto.Currency.KRW;
-import static ru.wallentos.carscratcher.dto.Currency.RUB;
-import static ru.wallentos.carscratcher.dto.Currency.USD;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NEW_CAR_CUSTOMS_MAP;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NEW_CAR_PRICE_MAX_FLAT_RATE;
 import static ru.wallentos.carscratcher.config.DutyConfigDataPool.NORMAL_CAR_CUSTOMS_MAP;
@@ -17,6 +14,9 @@ import static ru.wallentos.carscratcher.config.RecycleFeeConfigDataPool.NEW_MID_
 import static ru.wallentos.carscratcher.config.RecycleFeeConfigDataPool.OLD_BIG_CAR_RECYCLING_FEE;
 import static ru.wallentos.carscratcher.config.RecycleFeeConfigDataPool.OLD_CAR_RECYCLING_FEE;
 import static ru.wallentos.carscratcher.config.RecycleFeeConfigDataPool.OLD_MID_CAR_RECYCLING_FEE;
+import static ru.wallentos.carscratcher.dto.Currency.KRW;
+import static ru.wallentos.carscratcher.dto.Currency.RUB;
+import static ru.wallentos.carscratcher.dto.Currency.USD;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -26,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.wallentos.carscratcher.dto.Currency;
 import ru.wallentos.carscratcher.dto.CalculatorRequestDto;
 import ru.wallentos.carscratcher.dto.CalculatorResponseDto;
 import ru.wallentos.carscratcher.dto.CarCategory;
+import ru.wallentos.carscratcher.dto.Currency;
 
 /**
  * Калькулятор для расчёта стоимости автомобиля, утиль сбора и таможни.
@@ -85,9 +85,9 @@ public class CalculatorService {
     public CalculatorResponseDto calculateKoreaCarPrice(CalculatorRequestDto calculatorRequest) {
         double priceInEuro = convertMoneyToEuro(calculatorRequest.getOriginalPrice(), KRW);
         CarCategory carCategory = calculateCarCategoryByYearMonth(calculatorRequest.getYearMonth());
-        double firstPriceInRubles =
+        int firstPriceInRubles =
                 calculateFirstCarPriceInRublesByKrw(calculatorRequest.getOriginalPrice());
-        double extraPayRublePart = executeRubExtraPayAmountByCurrency(KRW);
+        int extraPayRublePart = executeRubExtraPayAmountByCurrency(KRW);
         int rawExtraPayInKrw = getRawValutePartInKrw(firstPriceInRubles);//первичная надбавка KRW
         double extraPayKrwPart =
                 executeFinalExtraPayValutePartInRublesByKrw(rawExtraPayInKrw); //надбавка KRW в рублях
@@ -105,7 +105,7 @@ public class CalculatorService {
                 .firstPriceInRubles(firstPriceInRubles)
                 //теперь считаем валютную надбавку в зависимости от настройки (динамичная либо статик конфиг)
                 .extraPayAmountRublePart(extraPayRublePart)
-                .resultPriceInRubles(firstPriceInRubles + feeRate + recyclingFee + extraPayRublePart + extraPayKrwPart)
+                .resultPriceInRubles((int) (firstPriceInRubles + feeRate + duty + recyclingFee + extraPayRublePart + extraPayKrwPart))
                 .extraPayAmountValutePart(extraPayKrwPart)
                 .location(executeLocation(KRW))
                 .build();
@@ -328,7 +328,7 @@ public class CalculatorService {
      * @param originalPriceInKrw оригинальная стоимость авто в вонах.
      * @return стоимость авто в рублях.
      */
-    private double calculateFirstCarPriceInRublesByKrw(int originalPriceInKrw) {
+    private int calculateFirstCarPriceInRublesByKrw(int originalPriceInKrw) {
         double result;
         log.info("Вычисляем первичную стоимость автомобиля в рублях для стоимости {} KRW",
                 originalPriceInKrw);
@@ -352,7 +352,7 @@ public class CalculatorService {
                             "Стоимость автомобиля {} {} * {} = {} RUB", originalPriceInKrw, KRW,
                     calculationRate, result);
         }
-        return result;
+        return (int) result;
     }
 
 
@@ -401,7 +401,7 @@ public class CalculatorService {
     /**
      * Рассчитываем доп взносы. Рублёвая часть. Брокерские расходы, СВХ, СБКТС.
      */
-    private double executeRubExtraPayAmountByCurrency(Currency currency) {
+    private int executeRubExtraPayAmountByCurrency(Currency currency) {
         switch (currency) {
             case KRW, USD:
                 return extraPayAmountInKoreaRub;

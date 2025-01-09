@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * Сущность для работы с БД.
  */
 @Data
-public class EncarSearchResponseDto {
+public class EncarDto {
     /**
      * Количество результатов.
      */
@@ -54,19 +54,28 @@ public class EncarSearchResponseDto {
         private String fuelType;
         private int yearMonth;
         private int mileage;
+        private int volume;
         private String color;
-        private int price;
+        /**
+         * Цена в валюте, полученная с сайта.
+         */
+        private int originalPrice;
+        /**
+         * Финальная цена в рублях.
+         */
+        private int finalPriceInRubles;
         private String officeCityState;
         private WDType wdType;
-        private List<EncarSearchResponseEntity.Photo> photos;
+        private List<Photo> photos;
+        private Detalization detalization;
 
         @Version
         private int version;
         /**
-         * Дата и время создания записи.
+         * Дата и время обновления записи.
          */
         @CreatedDate
-        private Instant createdDate;
+        private Instant createDate;
     }
 
     /**
@@ -80,5 +89,25 @@ public class EncarSearchResponseDto {
     public static final class Photo {
         private int ordering;
         private String location;
+    }
+
+    /**
+     * Детализация после калькуляции.
+     */
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static final class Detalization {
+        private CarCategory carCategory;
+        private double feeRate;
+        private double duty;
+        private int firstPriceInRubles;
+        private double recyclingFee;
+        private double extraPayAmountValutePart;
+        private int extraPayAmountRublePart;
+        private String location;
+        private String originalLink;
     }
 }

@@ -2,16 +2,17 @@ package ru.wallentos.carscratcher.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
-import ru.wallentos.carscratcher.dto.EncarSearchResponseDto;
+import ru.wallentos.carscratcher.dto.EncarDto;
 import ru.wallentos.carscratcher.dto.WDType;
 import ru.wallentos.carscratcher.repository.EncarRepository;
 import ru.wallentos.carscratcher.service.EncarScratchService;
@@ -30,13 +31,13 @@ public class UIController {
 
     @CrossOrigin
     @GetMapping("/get-car-by-id/{id}")
-    public ResponseEntity<EncarSearchResponseDto.CarDto> getCarById(@PathVariable int id) {
-        return ResponseEntity.ok(encarRepository.findCarsById(id));
+    public Mono<EncarDto.CarDto> getCarById(@PathVariable int id) {
+        return Mono.just(encarRepository.findCarById(id));
     }
 
     @CrossOrigin
     @GetMapping("/search-cars-by-filter")
-    public CarFilterResponseDto searchCarsByFilterGetRequest(
+    public Mono<CarFilterResponseDto> searchCarsByFilterGetRequest(
             @RequestParam(required = false) List<Long> carIds,
             @RequestParam(required = false) List<String> manufacturers,
             @RequestParam(required = false) List<String> models,
@@ -70,13 +71,13 @@ public class UIController {
 
     @CrossOrigin
     @GetMapping("/get-mark-list")
-    public ResponseEntity<List<String>> getMarkList() {
-        return ResponseEntity.ok(encarScratchService.getMarkList());
+    public Flux<String> getMarkList() {
+        return encarScratchService.getMarkList();
     }
 
     @CrossOrigin
     @GetMapping("/get-model-list-by-mark/{markName}")
-    public ResponseEntity<List<String>> getModelListByMarkName(@PathVariable String markName) {
-        return ResponseEntity.ok(encarScratchService.getModelListByMarkName(markName));
+    public Flux<String> getModelListByMarkName(@PathVariable String markName) {
+        return encarScratchService.getModelListByMarkName(markName);
     }
 }

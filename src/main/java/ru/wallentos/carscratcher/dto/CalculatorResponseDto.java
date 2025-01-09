@@ -23,9 +23,9 @@ public class CalculatorResponseDto {
      */
     private double duty;
     /**
-     * Стоимость автомобиля.
+     * Стоимость автомобиля без таможни.
      */
-    private double firstPriceInRubles;
+    private int firstPriceInRubles;
     /**
      * Утилизационный сбор.
      */
@@ -38,11 +38,11 @@ public class CalculatorResponseDto {
     /**
      * Рублёвая надбавка в рублях.
      */
-    private double extraPayAmountRublePart;
+    private int extraPayAmountRublePart;
     /**
      * Итоговая цена в рублях. (Первичная цена + таможенные/утиль сборы + надбавки)
      */
-    private double resultPriceInRubles;
+    private int resultPriceInRubles;
     /**
      * Локация доставки. (для результата)
      */

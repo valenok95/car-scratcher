@@ -19,7 +19,9 @@ ru:
   wallentos:
     carscratcher:
       encar-host: http://api.encar.com/
-      encar-car-header-info-method: search/car/list/warranty
+      encar-original-link: https://fem.encar.com/cars/detail/
+      encar-car-header-info-method: search/car/list/general
+      encar-car-vehicle-method: v1/readside/vehicle/
       mongo: search/car/list/warranty
       calculator:
         enable-double-convertation: true

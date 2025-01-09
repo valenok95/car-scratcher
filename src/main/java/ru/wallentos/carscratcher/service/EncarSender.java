@@ -1,6 +1,7 @@
 package ru.wallentos.carscratcher.service;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,8 @@ import ru.wallentos.carscratcher.exception.EmptyResponseException;
 public class EncarSender {
     @Value("${ru.wallentos.carscratcher.encar-car-header-info-method}")
     private String getCarHeaderInfoMethod;
+    @Value("${ru.wallentos.carscratcher.encar-car-vehicle-method}")
+    private String getVehicleInfoMethod;
 
     private WebClient webClient;
 
@@ -64,6 +67,24 @@ public class EncarSender {
             throw new EmptyResponseException("Вернулся пустой ответ.", null);
         } else {
             return response.getBody().getCount();
+        }
+    }
+
+    public int getVolumeByEncarId(long carId) {
+        ResponseEntity<JsonNode> response = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(getVehicleInfoMethod + carId).build())
+                .header("User-Agent",
+                        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0")
+                .retrieve()
+                .toEntity(JsonNode.class).block();
+        if (ObjectUtils.isEmpty(response)) {
+            throw new EmptyResponseException("Вернулся пустой ответ.", null);
+        } else {
+            int carVolume = response.getBody().get("spec").get("displacement").asInt();
+            log.info("Получен объем двигателя {} для car id {} ", carVolume, carId);
+            return carVolume;
         }
     }
 }

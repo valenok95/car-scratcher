@@ -22,6 +22,6 @@ public class CarFilterResponseDto {
     /**
      * Список автомобилей.
      */
-    private List<EncarSearchResponseDto.CarDto> searchResults;
+    private List<EncarDto.CarDto> searchResults;
 
 }
