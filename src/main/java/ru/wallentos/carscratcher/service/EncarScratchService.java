@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.wallentos.carscratcher.dto.CalculatorRequestDto;
 import ru.wallentos.carscratcher.dto.CalculatorResponseDto;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
@@ -154,9 +152,9 @@ public class EncarScratchService {
      * @param filter
      * @return
      */
-    public Mono<CarFilterResponseDto> findCarsByFilter(CarFilterRequestDto filter) {
+    public CarFilterResponseDto findCarsByFilter(CarFilterRequestDto filter) {
         log.info("Поиск авто в БД Mongo по фильтру: {}", filter);
-        return Mono.just(encarRepository.findCarsByFilter(filter));
+        return encarRepository.findCarsByFilter(filter);
     }
 
     /**
@@ -165,9 +163,9 @@ public class EncarScratchService {
      * @param markName производитель
      * @return список моделей
      */
-    public Flux<String> getModelListByMarkName(String markName) {
+    public List<String> getModelListByMarkName(String markName) {
         log.info("Получаем список моделей авто в БД Mongo для марки {}", markName);
-        return Flux.fromIterable(encarRepository.getModelListByMarkName(markName));
+        return encarRepository.getModelListByMarkName(markName);
     }
 
     /**
@@ -175,9 +173,9 @@ public class EncarScratchService {
      *
      * @return список марок
      */
-    public Flux<String> getMarkList() {
+    public List<String> getMarkList() {
         log.info("Получаем список марок авто");
-        return Flux.fromIterable(encarRepository.getMarkList());
+        return encarRepository.getMarkList();
     }
 }
 

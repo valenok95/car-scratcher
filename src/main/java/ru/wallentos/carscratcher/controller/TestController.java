@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 import ru.wallentos.carscratcher.dto.CalculatorRequestDto;
 import ru.wallentos.carscratcher.dto.CalculatorResponseDto;
 import ru.wallentos.carscratcher.service.CalculatorService;
@@ -27,13 +26,13 @@ public class TestController {
 
     @CrossOrigin
     @GetMapping("/calculate-car")
-    public Mono<CalculatorResponseDto> calculateCarByFullRequest(
+    public CalculatorResponseDto calculateCarByFullRequest(
             @RequestParam(required = false) Integer yearMonth,
             @RequestParam(required = false) Integer price,
             @RequestParam(required = false) Integer volume) {
         var requestDto = CalculatorRequestDto.builder()
                 .yearMonth(yearMonth).originalPrice(price).volume(volume).build();
-        return Mono.just(calculatorService.calculateKoreaCarPrice(requestDto));
+        return calculatorService.calculateKoreaCarPrice(requestDto);
     }
 
     @CrossOrigin

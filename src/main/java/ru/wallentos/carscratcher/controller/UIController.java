@@ -2,18 +2,20 @@ package ru.wallentos.carscratcher.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.server.ResponseStatusException;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarDto;
 import ru.wallentos.carscratcher.dto.WDType;
+import ru.wallentos.carscratcher.exception.CarNotFoundException;
 import ru.wallentos.carscratcher.repository.EncarRepository;
 import ru.wallentos.carscratcher.service.EncarScratchService;
 
@@ -31,13 +33,18 @@ public class UIController {
 
     @CrossOrigin
     @GetMapping("/get-car-by-id/{id}")
-    public Mono<EncarDto.CarDto> getCarById(@PathVariable int id) {
-        return Mono.just(encarRepository.findCarById(id));
+    public ResponseEntity<EncarDto.CarDto> getCarById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(encarRepository.findCarById(id));
+        } catch (CarNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @CrossOrigin
     @GetMapping("/search-cars-by-filter")
-    public Mono<CarFilterResponseDto> searchCarsByFilterGetRequest(
+    public CarFilterResponseDto searchCarsByFilterGetRequest(
             @RequestParam(required = false) List<Long> carIds,
             @RequestParam(required = false) List<String> manufacturers,
             @RequestParam(required = false) List<String> models,
@@ -71,13 +78,13 @@ public class UIController {
 
     @CrossOrigin
     @GetMapping("/get-mark-list")
-    public Flux<String> getMarkList() {
+    public List<String> getMarkList() {
         return encarScratchService.getMarkList();
     }
 
     @CrossOrigin
     @GetMapping("/get-model-list-by-mark/{markName}")
-    public Flux<String> getModelListByMarkName(@PathVariable String markName) {
+    public List<String> getModelListByMarkName(@PathVariable String markName) {
         return encarScratchService.getModelListByMarkName(markName);
     }
 }

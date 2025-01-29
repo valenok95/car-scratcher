@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarDto;
+import ru.wallentos.carscratcher.exception.CarNotFoundException;
 
 @Repository
 @Log4j2
@@ -271,6 +272,11 @@ public class EncarRepository {
      */
     public EncarDto.CarDto findCarById(long carId) {
         log.info("Поиск авто в БД Mongo по id: {}", carId);
-        return mongoTemplate.findById(carId, EncarDto.CarDto.class, "car");
+        EncarDto.CarDto result = mongoTemplate.findById(carId, EncarDto.CarDto.class, "car");
+        if (Objects.nonNull(result)) {
+            return result;
+        } else {
+            throw new CarNotFoundException("Ошибка. Автомобиль не найден.");
+        }
     }
 }

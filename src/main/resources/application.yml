@@ -4,7 +4,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/test
-
+server:
+  error:
+    include-message: always
 ru:
   wallentos:
     carscratcher:

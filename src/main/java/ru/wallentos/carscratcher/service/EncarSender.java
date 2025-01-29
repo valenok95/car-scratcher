@@ -1,14 +1,14 @@
 package ru.wallentos.carscratcher.service;
 
 
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseEntity;
 import ru.wallentos.carscratcher.dto.VehicleResponse;
 import ru.wallentos.carscratcher.exception.EmptyResponseException;
@@ -21,18 +21,18 @@ public class EncarSender {
     @Value("${ru.wallentos.carscratcher.encar-car-vehicle-method}")
     private String getVehicleInfoMethod;
 
-    private WebClient webClient;
+    private RestClient restClient;
 
     @Autowired
-    EncarSender(WebClient webClientEncar) {
-        this.webClient = webClientEncar;
+    EncarSender(RestClient restClientEncar) {
+        this.restClient = restClientEncar;
     }
 
     /**
      * Получить список автомобилей по лимиту
      */
     public EncarSearchResponseEntity getEncarInfoLimitedList(boolean count, int skip, int limit) {
-        ResponseEntity<EncarSearchResponseEntity> response = webClient
+        ResponseEntity<EncarSearchResponseEntity> response = restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("count", count)
@@ -43,8 +43,7 @@ public class EncarSender {
                 .header("User-Agent",
                         "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0")
                 .retrieve()
-                .toEntity(EncarSearchResponseEntity.class)
-                .block();
+                .toEntity(EncarSearchResponseEntity.class);
         if (ObjectUtils.isEmpty(response)) {
             throw new EmptyResponseException("Вернулся пустой ответ.", null);
         } else {
@@ -56,15 +55,14 @@ public class EncarSender {
      * Получить количество автомобилей.
      */
     public int getEncarDataCount() {
-        ResponseEntity<EncarSearchResponseEntity> response = webClient
+        ResponseEntity<EncarSearchResponseEntity> response = restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("count", true)
                         .queryParam("q", "(And.Hidden.N._.CarType.Y.)")
                         .path(getCarHeaderInfoMethod).build())
                 .retrieve()
-                .toEntity(EncarSearchResponseEntity.class)
-                .block();
+                .toEntity(EncarSearchResponseEntity.class);
         if (ObjectUtils.isEmpty(response)) {
             throw new EmptyResponseException("Вернулся пустой ответ.", null);
         } else {
@@ -79,23 +77,22 @@ public class EncarSender {
      * @return
      */
     public VehicleResponse.Spec getEncarDetailDataByEncarId(long carId) {
-        VehicleResponse.Spec vehicleResponseSpec = webClient
+        VehicleResponse vehicleResponse = restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(getVehicleInfoMethod + carId).build())
                 .header("User-Agent",
                         "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0")
                 .retrieve()
-                .toEntity(VehicleResponse.class)
-                .mapNotNull(HttpEntity::getBody)
-                .map(VehicleResponse::getSpec).block();
-        if (ObjectUtils.isEmpty(vehicleResponseSpec)) {
+                .body(VehicleResponse.class);
+        
+        if (Objects.isNull(vehicleResponse) || ObjectUtils.isEmpty(vehicleResponse.getSpec())) {
             throw new EmptyResponseException("Вернулся пустой ответ.", null);
         } else {
             log.debug("Получен объем двигателя {} для car id {} ",
-                    vehicleResponseSpec.getVolume(),
+                    vehicleResponse.getSpec().getVolume(),
                     carId);
-            return vehicleResponseSpec;
+            return vehicleResponse.getSpec();
         }
     }
 }
