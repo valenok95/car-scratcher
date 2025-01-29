@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,7 @@ import ru.wallentos.carscratcher.dto.CarFilterRequestDto;
 import ru.wallentos.carscratcher.dto.CarFilterResponseDto;
 import ru.wallentos.carscratcher.dto.EncarDto;
 import ru.wallentos.carscratcher.dto.EncarSearchResponseEntity;
+import ru.wallentos.carscratcher.dto.VehicleResponse;
 import ru.wallentos.carscratcher.mapper.EncarResponseMapper;
 import ru.wallentos.carscratcher.repository.EncarRepository;
 
@@ -103,7 +103,10 @@ public class EncarScratchService {
                 newCarIdToCarDtoMap.size());
         List<EncarDto.CarDto> resultCarList =
                 new java.util.ArrayList<>(newCarIdToCarDtoMap.values().stream().map(car -> {
-                    car.setVolume(encarSender.getVolumeByEncarId(car.getCarId()));
+                    VehicleResponse.Spec detailEnarInfo =
+                            encarSender.getEncarDetailDataByEncarId(car.getCarId());
+                    car.setBodyName(detailEnarInfo.getBodyName());
+                    car.setVolume(detailEnarInfo.getVolume());
                     return car;
                 }).toList());
         resultCarList.addAll(carsFromDbList);
@@ -116,7 +119,7 @@ public class EncarScratchService {
      * @param carDto данные по автомобилю для расчёта всех расходов.
      */
     private void enrichDetalizationForCar(EncarDto.CarDto carDto) {
-        log.info("Начинаем калькулировать информацию о расчёте автомобиля {}", carDto.getCarId());
+        log.debug("Начинаем калькулировать информацию о расчёте автомобиля {}", carDto.getCarId());
         CalculatorResponseDto calculationResult = calculatorService.calculateKoreaCarPrice(CalculatorRequestDto.builder()
                 .originalPrice(carDto.getOriginalPrice())
                 .yearMonth(carDto.getYearMonth())
@@ -133,7 +136,7 @@ public class EncarScratchService {
                 .location(calculationResult.getLocation())
                 .originalLink(encarOriginalLink + carDto.getCarId()).build());
         carDto.setFinalPriceInRubles(calculationResult.getResultPriceInRubles());
-        log.info("Закончили калькулировать информацию о расчёте автомобиля {}", carDto.getCarId());
+        log.debug("Закончили калькулировать информацию о расчёте автомобиля {}", carDto.getCarId());
     }
 
     /**

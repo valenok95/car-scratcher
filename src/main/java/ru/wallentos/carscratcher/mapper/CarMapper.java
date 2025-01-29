@@ -1,5 +1,8 @@
 package ru.wallentos.carscratcher.mapper;
 
+import static ru.wallentos.carscratcher.config.TranslatorConfig.MANUFACTURER_TRANSLATE_MAP;
+
+import java.util.Objects;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,6 +17,8 @@ public interface CarMapper {
             "defineWDType")
     @Mapping(source = "price", target = "originalPrice", qualifiedByName =
             "convertKrwPrice")
+    @Mapping(source = "manufacturer", target = "manufacturer", qualifiedByName =
+            "defineManufacturer")
     EncarDto.CarDto toCarDto(EncarSearchResponseEntity.CarEntity responseEntity);
 
     @Named("defineWDType")
@@ -29,5 +34,10 @@ public interface CarMapper {
     @Named("convertKrwPrice")
     static int convertKrwPrice(int price) {
         return price * 10_000;
+    }
+    @Named("defineManufacturer")
+    static String defineManufacturer(String manufacturerKoreanName) {
+        String englishName = MANUFACTURER_TRANSLATE_MAP.get(manufacturerKoreanName);
+        return Objects.nonNull(englishName) ? englishName : manufacturerKoreanName;
     }
 }

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -47,14 +48,13 @@ public class EncarDto {
          * Производитель.
          */
         private String manufacturer;
-        private String model;
-        private String badge;
-        private String badgeDetail;
-        private String transmission;
-        private String fuelType;
-        private int yearMonth;
-        private int mileage;
+        /**
+         * Объем двигателя автомобиля.
+         */
         private int volume;
+        /**
+         * Цвет
+         **/
         private String color;
         /**
          * Цена в валюте, полученная с сайта.
@@ -64,18 +64,40 @@ public class EncarDto {
          * Финальная цена в рублях.
          */
         private int finalPriceInRubles;
+        /**
+         * Название кузова.
+         */
+        private String bodyName;
         private String officeCityState;
         private WDType wdType;
+        private String model;
+        private String badge;
+        private String badgeDetail;
+        private String transmission;
+        private String fuelType;
+        private int yearMonth;
+        private int mileage;
+        /**
+         * Фотографии объявлений.
+         */
         private List<Photo> photos;
+        /**
+         * Детализация расчёта со всеми взносами.
+         */
         private Detalization detalization;
 
         @Version
         private int version;
         /**
-         * Дата и время обновления записи.
+         * Дата и время сохранения записи.
          */
         @CreatedDate
         private Instant createDate;
+        /**
+         * Дата и время обновления записи.
+         */
+        @LastModifiedDate
+        private Instant updateDate;
     }
 
     /**
@@ -100,6 +122,9 @@ public class EncarDto {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Detalization {
+        /**
+         * Возрастная категория авто.
+         */
         private CarCategory carCategory;
         private double feeRate;
         private double duty;

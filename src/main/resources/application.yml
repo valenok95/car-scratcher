@@ -4,16 +4,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/test
-  cloud:
-    gateway:
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "*"
 
 ru:
   wallentos:
@@ -22,7 +12,6 @@ ru:
       encar-original-link: https://fem.encar.com/cars/detail/
       encar-car-header-info-method: search/car/list/general
       encar-car-vehicle-method: v1/readside/vehicle/
-      mongo: search/car/list/warranty
       calculator:
         enable-double-convertation: true
         enable-dynamic-valute-part: true
@@ -31,7 +20,6 @@ ru:
           krw: 1600000
           rub: 100000
       exchange-api:
-        ajax: true
         host-cbr: https://www.cbr-xml-daily.ru/daily_json.js
         host-profinance: https://jq.profinance.ru/html/htmlquotes/q
         host-naver: https://finance.naver.com/marketindex/exchangeDetail.nhn?marketindexCd=FX_USDKRW

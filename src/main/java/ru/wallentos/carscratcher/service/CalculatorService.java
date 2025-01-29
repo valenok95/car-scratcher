@@ -330,7 +330,7 @@ public class CalculatorService {
      */
     private int calculateFirstCarPriceInRublesByKrw(int originalPriceInKrw) {
         double result;
-        log.info("Вычисляем первичную стоимость автомобиля в рублях для стоимости {} KRW",
+        log.debug("Вычисляем первичную стоимость автомобиля в рублях для стоимости {} KRW",
                 originalPriceInKrw);
         // двойная конвертация при включенной настройке. ЦЕНУ В ВОНАХ делим на спец. курс KRW/RUB
         if (enableDoubleConvertation) {
@@ -338,7 +338,7 @@ public class CalculatorService {
             double krwRubDoubleConvertationRate =
                     moneyRateRestService.getRublesAmountInCurrencyForCalculationRate(USD) / moneyRateRestService.getCbrUsdKrwMinusCorrection();
             result = originalPriceInKrw * krwRubDoubleConvertationRate;
-            log.info("""
+            log.debug("""
                             Режим двойной конвертации:
                             Стоимость автомобиля {} {} поделённая на курс USD/KRW-коррекция {} и умноженная на ручной курс USD/RUB {} = {} RUB""", originalPriceInKrw
                     , KRW,
@@ -348,7 +348,7 @@ public class CalculatorService {
             double calculationRate =
                     moneyRateRestService.getRublesAmountInCurrencyForCalculationRate(KRW);
             result = originalPriceInKrw * calculationRate;
-            log.info("Режим стандартной конвертации:" +
+            log.debug("Режим стандартной конвертации:" +
                             "Стоимость автомобиля {} {} * {} = {} RUB", originalPriceInKrw, KRW,
                     calculationRate, result);
         }
@@ -369,7 +369,7 @@ public class CalculatorService {
             double priceInUsd = priceInRubles / calculationUsdRubRate;
             int extraPayAmountKoreaKrwResult =
                     getDynamicValutePartInKrwByUsdPrice(priceInUsd);
-            log.info("""
+            log.debug("""
                     Устанавливаем динамическую валютную надбавку для KRW:
                     Цена в $ - это Цена в рублях {} поделить на ручной курс USD {} = {}$
                     Соответствующая валютная надбавка - {} KRW.
@@ -418,7 +418,7 @@ public class CalculatorService {
      * @return Итоговая валютная надбавка в рублях.
      */
     private double executeFinalExtraPayValutePartInRublesByKrw(int rawExtraPayInKrw) {
-        log.info("Финальный расчёт валютной надбавки, первичная надбавка - {} KRW", rawExtraPayInKrw);
+        log.debug("Финальный расчёт валютной надбавки, первичная надбавка - {} KRW", rawExtraPayInKrw);
         return enableDoubleConvertation ? getExtraKrwPayAmountDoubleConvertationInRubles(rawExtraPayInKrw) :
                 getExtraPayKrwAmountNormalConvertationInRub(rawExtraPayInKrw);
     }
@@ -434,7 +434,7 @@ public class CalculatorService {
         double usdKrwMinusCorrectionRate = moneyRateRestService.getCbrUsdKrwMinusCorrection();
         double priceInUsd = rawExtraPayInKrw / usdKrwMinusCorrectionRate;
         double result = priceInUsd * calculationUsdRubRate;
-        log.info("""
+        log.debug("""
                         В режиме двойной конвертации.
                         Валютная надбавка в USD: надбавка {} KRW * курс-коррекция {} = {} USD
                         Валютная надбавка в рублях: {} USD * ручной курс {} = {} RUB
@@ -454,7 +454,7 @@ public class CalculatorService {
                 moneyRateRestService.getRublesAmountInCurrencyForCalculationRate(KRW);
         double result;
         result = rawExtraPayInKrw * calculationKrwRubRate;
-        log.info("""
+        log.debug("""
                 В режиме нормальной конвертации в рублях:
                 Надбавка {} KRW * ручной курс {} = {} RUB
                 """, rawExtraPayInKrw, calculationKrwRubRate, result);

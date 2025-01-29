@@ -42,13 +42,15 @@ public class EncarRepository {
      * @param carDtoList список авто для сохранения.
      */
     public void insertOrReplaceCars(List<EncarDto.CarDto> carDtoList) {
-        mongoTemplate.findAllAndRemove(
+        mongoTemplate.remove(
                 new Query(
                         Criteria.where("_id")
                                 .in(carDtoList.stream().map(EncarDto.CarDto::getCarId)
                                         .toList())),
                 ENCAR_RESULT_COLLECTION_NAME);
-        mongoTemplate.insertAll(carDtoList);
+        Collection<EncarDto.CarDto> result = mongoTemplate.insertAll(carDtoList);
+
+        log.info("В базу сохранено {} автомобилей", result.size());
     }
 
     /**
