@@ -27,9 +27,9 @@ import ru.wallentos.carscratcher.exception.CarNotFoundException;
 public class EncarRepository {
     private final String ENCAR_RESULT_COLLECTION_NAME = "car";
     private final String ID_FIELD_NAME = "_id";
-    private final String PRICE_FIELD_NAME = "price";
+    private final String FINAL_PRICE_IN_RUBLES_FIELD_NAME = "finalPriceInRubles";
     private final String MILEAGE_FIELD_NAME = "mileage";
-    private final String YEAR_FIELD_NAME = "year";
+    private final String YEAR_MONTH_FIELD_NAME = "yearMonth";
     private final MongoTemplate mongoTemplate;
 
 
@@ -122,17 +122,17 @@ public class EncarRepository {
 
 
         if (!ObjectUtils.isEmpty(filter.getPriceLessThan())) {
-            criteria.and(PRICE_FIELD_NAME).lte(filter.getPriceLessThan());
+            criteria.and(FINAL_PRICE_IN_RUBLES_FIELD_NAME).lte(filter.getPriceLessThan());
         }
         if (!ObjectUtils.isEmpty(filter.getPriceMoreThan())) {
-            criteria.and(PRICE_FIELD_NAME).gte(filter.getPriceMoreThan());
+            criteria.and(FINAL_PRICE_IN_RUBLES_FIELD_NAME).gte(filter.getPriceMoreThan());
         }
 
         if (!ObjectUtils.isEmpty(filter.getYearLessThan())) {
-            criteria.and(YEAR_FIELD_NAME).lte(filter.getYearLessThan());
+            criteria.and(YEAR_MONTH_FIELD_NAME).lte(filter.getYearLessThan());
         }
         if (!ObjectUtils.isEmpty(filter.getYearMoreThan())) {
-            criteria.and(YEAR_FIELD_NAME).gte(filter.getYearMoreThan());
+            criteria.and(YEAR_MONTH_FIELD_NAME).gte(filter.getYearMoreThan());
         }
         if (!ObjectUtils.isEmpty(filter.getMileageLessThan())) {
             criteria.and(MILEAGE_FIELD_NAME).lte(filter.getMileageLessThan());
@@ -165,9 +165,9 @@ public class EncarRepository {
         }
 
         addComparableFieldCriteria(query, filter.getYearLessThan(), filter.getYearMoreThan(),
-                YEAR_FIELD_NAME);
+                YEAR_MONTH_FIELD_NAME);
         addComparableFieldCriteria(query, filter.getPriceLessThan(), filter.getPriceMoreThan(),
-                PRICE_FIELD_NAME);
+                FINAL_PRICE_IN_RUBLES_FIELD_NAME);
         addComparableFieldCriteria(query, filter.getMileageLessThan(), filter.getMileageMoreThan(),
                 MILEAGE_FIELD_NAME);
 
